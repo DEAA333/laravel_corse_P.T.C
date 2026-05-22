@@ -35,12 +35,30 @@ Route::post(uri: '/about', action: function(){
 });
 
 Route::get(uri: 'tasks',action:function(){
-    return view (view:'tasks');
+    $tasks = DB::table(table: 'tasks')->get();
+    return view (view:'tasks',data:compact('tasks'));
 });
 
 Route::post(uri: 'create', action: function(){
     $task_name = $_POST['name'];
      DB::table(table: 'tasks')->insert(['name' => $task_name]);
-    return view(view: 'tasks');
+    return redirect()->back();
 
  });
+
+ Route::post(uri: 'delete/{id}', action: function($id){
+    DB::table(table: 'tasks')->where(column: 'id', operator: $id)->delete();
+    return redirect()->back();
+ });
+
+ Route::post(uri:'edit/{id}', action: function($id){
+    $task = DB::table(table: 'tasks')->where(column: 'id', operator: $id)->first();
+    $tasks = DB::table(table: 'tasks')->get();
+    return view(view: 'tasks', data: compact( 'task',  'tasks'));
+ });
+
+    Route::post(uri: 'update', action: function(){
+        $id = $_POST['id'];
+        DB::table(table: 'tasks')->where('id','=', $id)->update(['name' => $_POST['name']]);
+        return redirect('tasks');
+    });
