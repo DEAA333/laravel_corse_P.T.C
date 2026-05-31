@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+
 
 Route::get(uri: '/', action: function (){
     return view(view: 'welcome');
@@ -34,31 +37,24 @@ Route::post(uri: '/about', action: function(){
     return view(view: 'about', data: compact( 'name',  'departments'));
 });
 
-Route::get(uri: 'tasks',action:function(){
-    $tasks = DB::table(table: 'tasks')->get();
-    return view (view:'tasks',data:compact('tasks'));
-});
+Route::get(uri: 'tasks',action:[TaskController::class, 'index'] );
 
-Route::post(uri: 'create', action: function(){
-    $task_name = $_POST['name'];
-     DB::table(table: 'tasks')->insert(['name' => $task_name]);
-    return redirect()->back();
+Route::post(uri: 'create', action:[TaskController::class, 'create'] );
 
- });
+ Route::post(uri: 'delete/{id}', action: [TaskController::class, 'destroy'] );
 
- Route::post(uri: 'delete/{id}', action: function($id){
-    DB::table(table: 'tasks')->where(column: 'id', operator: $id)->delete();
-    return redirect()->back();
- });
+ Route::post(uri:'edit/{id}', action: [TaskController::class, 'edit'] );
 
- Route::post(uri:'edit/{id}', action: function($id){
-    $task = DB::table(table: 'tasks')->where(column: 'id', operator: $id)->first();
-    $tasks = DB::table(table: 'tasks')->get();
-    return view(view: 'tasks', data: compact( 'task',  'tasks'));
- });
+    Route::post(uri: 'update', action: [TaskController::class, 'update']);
 
-    Route::post(uri: 'update', action: function(){
-        $id = $_POST['id'];
-        DB::table(table: 'tasks')->where('id','=', $id)->update(['name' => $_POST['name']]);
-        return redirect('tasks');
+    Route::get('app', function () {
+        return view('layouts.app');
+
     });
+
+
+Route::get('users', [UserController::class, 'index']);
+Route::post('users/create', [UserController::class, 'create']);
+Route::post('users/delete/{id}', [UserController::class, 'destroy']);
+Route::post('users/edit/{id}', [UserController::class, 'edit']);
+Route::post('users/update', [UserController::class, 'update']);
