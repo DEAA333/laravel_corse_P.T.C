@@ -15,7 +15,7 @@
                         <!-- Task Name -->
                         <div class="mb-3">
                             <label for="task-name" class="form-label">Task</label>
-                            <input type="text" name="name" id="task-name" class="form-control" value="{{$task->name}}">
+                            <input type="text" name="name" id="task-name" class="form-control" value="{{$task->name}}"  >
                         </div>
 
                         <!-- Update Task Button -->
@@ -37,7 +37,7 @@
                         <!-- Task Name -->
                         <div class="mb-3">
                             <label for="task-name" class="form-label">Task</label>
-                            <input type="text" name="name" id="task-name" class="form-control" value="">
+                            <input type="text" name="name" id="task-name" class="form-control" value=""  >
                         </div>
 
                         <!-- Add Task Button -->
@@ -47,8 +47,19 @@
                             </button>
                         </div>
                     </form>
+
                 </div>
                                 @endif
+
+                                 @if ($errors->any())
+                        <div class="alert alert-danger mt-3">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
             </div>
 
